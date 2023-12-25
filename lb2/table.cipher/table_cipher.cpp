@@ -71,6 +71,7 @@ std::string table_cipher::decrypt() {
             res = res + st_to_vec[i][j];
         }
     }
+    res.erase(std::remove(res.begin(), res.end(), ' '), res.end());
     return res;
 }
 void table_cipher::text_validation(std::string &text){
@@ -80,11 +81,16 @@ void table_cipher::text_validation(std::string &text){
             throw table_error("Invalid text: "+ text);
             exit(1);
         }
+        text[i]=toupper(text[i]);
     }
     
 }
 void table_cipher::key_validation(uint &key,std::string &text){
     if(key>text.length()){
+        throw table_error ("Invalid key length: "+std::to_string(key));
+        exit(1);
+    }
+    if(key==1 or key==text.length()){
         throw table_error ("Invalid key length: "+std::to_string(key));
         exit(1);
     }

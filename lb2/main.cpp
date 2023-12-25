@@ -2,14 +2,6 @@
 #include <clocale>
 #include "modAlphaCipher.h"
 using namespace std;
-// проверка, чтобы строка состояла только из прописных букв
-bool isValid(const wstring& s)
-{
-    for(auto c:s)
-        if (!iswalpha(c) || !iswupper(c))
-            return false;
-    return true;
-}
 void key_validation(wstring &key, const wstring &text){
     while(key.length()<text.length()){
         key=key+key;

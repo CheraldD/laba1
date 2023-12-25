@@ -1,6 +1,7 @@
 #include <iostream>
 #include <UnitTest++/UnitTest++.h>
 #include "includer.h"
+#include <locale>
 struct KeyB_fixture {
     modAlphaCipher * p;
     KeyB_fixture()
@@ -17,13 +18,35 @@ SUITE(modAlpha_test)
 {
     SUITE(KeyTest) {
         TEST(ValidKey) {
-            CHECK_EQUAL(L"АБВАБ",modAlphaCipher(L"АБВ").encrypt(L"ААААА"));
+            std::wstring res =modAlphaCipher(L"АБВ").encrypt(L"ААААА") ;
+            std::wstring temp = L"АБВАБ";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
+            
         }
-        TEST(LongKey) {
-            CHECK_EQUAL(L"АБВГД",modAlphaCipher(L"АБВГДЕЁЖЗИ").encrypt(L"ААААА"));
+     TEST(LongKey) {
+            std::wstring res = modAlphaCipher(L"АБВГДЕЁЖЗИ").encrypt(L"ААААА");
+            std::wstring temp = L"АБВГД";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST(LowCaseKey) {
-            CHECK_EQUAL(L"БВГБВ",modAlphaCipher(L"бвг").encrypt(L"ААААА"));
+            std::wstring res = modAlphaCipher(L"бвг").encrypt(L"ААААА");
+            std::wstring temp = L"БВГБВ";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST(DigitsInKey) {
             CHECK_THROW(modAlphaCipher cp(L"Б1"),cipher_error);
@@ -46,19 +69,44 @@ SUITE(modAlpha_test)
     }
     SUITE(EncryptTest) {
         TEST_FIXTURE(KeyB_fixture, UpCaseString) {
-            CHECK_EQUAL(L"СРЖЪЮЯФЛЧЦТВПШХКУМЛЧГХНРМ",
-                        p->encrypt(L"ПОЕШЬЭТИХФРАНЦУЗСКИХБУЛОК"));
+            std::wstring res = p->encrypt(L"ПОЕШЬЭТИХФРАНЦУЗСКИХБУЛОК");
+            std::wstring temp = L"СРЖЪЮЯФКЧЦТВПШХЙУМКЧГХНРМ";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST_FIXTURE(KeyB_fixture, LowCaseString) {
-            CHECK_EQUAL(L"СРЖЪЮЯФЛЧЦТВПШХКУМЛЧГХНРМ",
-                        p->encrypt(L"поешьэтихфранцузскихбулок"));
+            std::wstring res = p->encrypt(L"поешьэтихфранцузскихбулок") ;
+            std::wstring temp = L"СРЖЪЮЯФКЧЦТВПШХЙУМКЧГХНРМ";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST_FIXTURE(KeyB_fixture, StringWithWhitspaceAndPunct) {
-            CHECK_EQUAL(L"СРЖЪЮЯФЛЧЦТВПШХКУМЛЧГХНРМ",
-                        p->encrypt(L"поешь этих французских булок !!!"));
+            std::wstring res = p->encrypt(L"поешь этих французских булок !!!") ;
+            std::wstring temp = L"СРЖЪЮЯФКЧЦТВПШХЙУМКЧГХНРМ";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST_FIXTURE(KeyB_fixture, StringWithNumbers) {
-            CHECK_EQUAL("IBQQZOFXZFBS", p->encrypt("Happy New 2019 Year"));
+            std::wstring res = p->encrypt(L"С новым 2024 годом!");
+            std::wstring temp = L"УПРДЭОЕРЁРО";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST_FIXTURE(KeyB_fixture, EmptyString) {
             CHECK_THROW(p->encrypt(L""),cipher_error);
@@ -67,33 +115,142 @@ SUITE(modAlpha_test)
             CHECK_THROW(p->encrypt(L"1234+8765=9999"),cipher_error);
         }
         TEST(MaxShiftKey) {
-            CHECK_EQUAL(L"ОНДЧЫЬСЗФУПЯМХТЖРИЗФАТКНИ",
-                        modAlphaCipher(L"Я").encrypt(L"ПОЕШЬЭТИХФРАНЦУЗСКИХБУЛОК"));
+            std::wstring res = modAlphaCipher(L"Я").encrypt(L"ПОЕШЬЭТИХФРАНЦУЗСКИХБУЛОК");
+            std::wstring temp = L"ОНДЧЫЬСЗФУПЯМХТЖРЙЗФАТКНЙ";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
     }
     SUITE(DecryptText) {
         TEST_FIXTURE(KeyB_fixture, UpCaseString) {
-            CHECK_EQUAL("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG",
-                        p->decrypt("UIFRVJDLCSPXOGPYKVNQTPWFSUIFMBAZEPH"));
+            std::wstring res = p->decrypt(L"СРЖЪЮЯФКЧЦТВПШХЙУМКЧГХНРМ") ;
+            std::wstring temp = L"ПОЕШЬЭТИХФРАНЦУЗСКИХБУЛОК";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
         TEST_FIXTURE(KeyB_fixture, LowCaseString) {
-            CHECK_THROW(p->decrypt("uifRVJDLCSPXOGPYKVNQTPWFSUIFMBAZEPH"),cipher_error);
+            CHECK_THROW(p->decrypt(L"срЖЪЮЯФЛЧЦТВПШХКУМЛЧГХНРМ"),cipher_error);
         }
         TEST_FIXTURE(KeyB_fixture, WhitespaceString) {
-            CHECK_THROW(p->decrypt("UIF RVJDL CSPXO GPY KVNQT PWFS UIF MBAZ EPH"),cipher_error);
+            CHECK_THROW(p->decrypt(L"СРЖЪЮ ЯФЛЧ ЦТВПШХКУМЛЧ ГХНРМ"),cipher_error);
         }
         TEST_FIXTURE(KeyB_fixture, DigitsString) {
-            CHECK_THROW(p->decrypt("IBQQZOFX2019ZFBS"),cipher_error);
+            CHECK_THROW(p->decrypt(L"УПРДЭО2024ЕРЁРО"),cipher_error);
         }
         TEST_FIXTURE(KeyB_fixture, PunctString) {
-            CHECK_THROW(p->decrypt("IFMMP,XPSME"),cipher_error);
+            CHECK_THROW(p->decrypt(L"СТКДЖФ,ВПЁТЖЛ"),cipher_error);
         }
         TEST_FIXTURE(KeyB_fixture, EmptyString) {
-            CHECK_THROW(p->decrypt(""),cipher_error);
+            CHECK_THROW(p->decrypt(L""),cipher_error);
         }
         TEST(MaxShiftKey) {
-            CHECK_EQUAL("THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG",
-                        modAlphaCipher("Z").decrypt("SGDPTHBJAQNVMENWITLORNUDQSGDKZYXCNF"));
+            std::wstring res = modAlphaCipher(L"Я").decrypt(L"ОНДЧЫЬСЗФУПЯМХТЖРЙЗФАТКНЙ") ;
+            std::wstring temp = L"ПОЕШЬЭТИХФРАНЦУЗСКИХБУЛОК";
+            if(temp==res){
+                CHECK(true);
+            }
+            else{
+                CHECK(false);
+            }
         }
     }
+}
+SUITE(table_cipher_test){
+    SUITE(initialization_test){
+        TEST(right_key){
+            std::string test = "helloworld";
+            std::string test2="";
+            CHECK_THROW(table_cipher t (test,4,test2),table_error);
+        }
+        TEST(long_key){
+            std::string test = "helloworld";
+            std::string test2="";
+            CHECK_THROW(table_cipher t (test,12,test2),table_error);
+        }
+        TEST(short_key){
+            std::string test = "helloworld";
+            std::string test2="";
+            CHECK_THROW(table_cipher t (test,1,test2),table_error);
+        }
+        TEST(text_with_spaces){
+            std::string test = "hello world";
+            std::string test2="";
+            CHECK_THROW(table_cipher t (test,4,test2),table_error);
+        }
+        TEST(text_with_spsymbols){
+            std::string test = "helloworld!@#$%";
+            std::string test2="";
+            CHECK_THROW(table_cipher t (test,4,test2),table_error);
+        }
+        TEST(text_with_numbers){
+            std::string test = "helloworld1234";
+            std::string test2="";
+            CHECK_THROW(table_cipher t (test,4,test2),table_error);
+        }
+    }
+    SUITE(encrypt_test){
+        TEST(upcase_text){
+            std::string test = "HELLOWORLD";
+            std::string test2="";
+            table_cipher t (test,4,test2);
+            CHECK_EQUAL("LRLOEWDHOL",t.encrypt());
+        }
+        TEST(lowcase_text){
+            std::string test = "helloworld";
+            std::string test2="";
+            table_cipher t (test,4,test2);
+            CHECK_EQUAL("LRLOEWDHOL",t.encrypt());
+        }
+        TEST(text_with_spaces){
+            std::string test = "hello world";
+            std::string test2="";
+            table_cipher t (test,4,test2);
+            CHECK_EQUAL("LRLOEWDHOL",t.encrypt());
+        }
+        TEST(non_int_key){
+            std::string test = "HELLOWORLD";
+            std::string test2="";
+            table_cipher t (test,4.9,test2);
+            CHECK_EQUAL("LRLOEWDHOL",t.encrypt());
+        }
+    }
+    SUITE(decrypt_test){
+        TEST(upcase_text){
+            std::string test = "LRLOEWDHOL";
+            std::string test2=" ";
+            table_cipher t (test,4,test2);
+            CHECK_EQUAL("HELLOWORLD",t.decrypt());
+        }
+        TEST(lowcase_text){
+            std::string test = "lrloewdhol";
+            std::string test2=" ";
+            table_cipher t (test,4,test2);
+            CHECK_EQUAL("HELLOWORLD",t.decrypt());
+        }
+        TEST(text_with_spaces){
+            std::string test = "LRLOEWDHOL";
+            std::string test2=" ";
+            table_cipher t (test,4,test2);
+            CHECK_EQUAL("HELLOWORLD",t.decrypt());
+        }
+        TEST(non_int_key){
+            std::string test = "HELLOWORLD";
+            std::string test2="";
+            table_cipher t (test,4.9,test2);
+            CHECK_EQUAL("LRLOEWDHOL",t.encrypt());
+        }
+    }
+}
+int main(){
+    std::locale loc("ru_RU.UTF-8");
+    std::locale::global(loc);
+    return UnitTest::RunAllTests();
 }

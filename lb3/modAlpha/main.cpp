@@ -23,12 +23,11 @@ int main(int argc, char **argv)
     do {
         wcout<<L"Cipher ready. Input operation (0-exit, 1-encrypt, 2-decrypt): ";
         wcin>>op;
-        if (op > 2) {
+        if (op > 2 or iswdigit(op)) {
             wcout<<L"Illegal operation\n";
         } else if (op >0) {
             wcout<<L"Cipher ready. Input text: ";
-            wcin>>text;
-            //cipher.text_validation(text);
+            getline(wcin.ignore(),text);
             key_validation(key,text);
                 if (op==1) {
                     wcout<<L"Encrypted text: "<<cipher.encrypt(text)<<endl;

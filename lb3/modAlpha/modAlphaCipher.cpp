@@ -4,13 +4,14 @@ modAlphaCipher::modAlphaCipher(const std::wstring& skey)
     for (unsigned i=0; i<numAlpha.size(); i++) {
         alphaNum[numAlpha[i]]=i;
     }
+    key_validation(getValidKey(skey));
     key = convert(getValidKey(skey));
 }
 std::wstring modAlphaCipher::encrypt(const std::wstring& open_text)
 {
-    std::wstring t = getValidOpenText(open_text);
-    std::wcout<<t<<std::endl;
-    std::vector<int> work = convert(getValidOpenText(open_text));
+    std::wstring temp = getValidOpenText(open_text);
+    text_validation(temp);
+    std::vector<int> work = convert(temp);
     for(unsigned i=0; i < work.size(); i++) {
         work[i] = (work[i] + key[i % key.size()]) % alphaNum.size();
     }
@@ -18,7 +19,9 @@ std::wstring modAlphaCipher::encrypt(const std::wstring& open_text)
 }
 std::wstring modAlphaCipher::decrypt(const std::wstring& cipher_text)
 {
-    std::vector<int> work = convert(getValidCipherText(cipher_text));
+    std::wstring temp = getValidCipherText(cipher_text);
+    text_validation(temp);
+    std::vector<int> work = convert(temp);
     for(unsigned i=0; i < work.size(); i++) {
         work[i] = (work[i] + alphaNum.size() - key[i % key.size()]) % alphaNum.size();
     }
@@ -75,13 +78,20 @@ inline std::wstring modAlphaCipher::getValidCipherText(const std::wstring & s)
         throw cipher_error("Empty cipher text");
     for (auto c:s) {
         if (!iswupper(c))
-            throw cipher_error(std::string("Invalid cipher text "));//доработать
+            throw cipher_error(std::string("Invalid cipher text "));
     }
     return s;
 }
-void modAlphaCipher::text_validation(std::wstring &text){
+void modAlphaCipher::text_validation(const std::wstring &text){
     for (int i =0;i<text.length();i++){
         if(numAlpha.find(text[i])==std::wstring::npos){
+            throw cipher_error("Invalid text's alphabet");
+        }
+    }
+}
+void modAlphaCipher::key_validation(const std::wstring &key){
+    for (int i =0;i<key.length();i++){
+        if(numAlpha.find(key[i])==std::wstring::npos){
             throw cipher_error("Invalid text's alphabet");
         }
     }
