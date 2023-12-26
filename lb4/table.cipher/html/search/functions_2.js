@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['key_5fvalidation_19',['key_validation',['../classtable__cipher.html#af0a1700a234e0e8f3f9bd8ee52996e90',1,'table_cipher']]]
+  ['get_5faction_25',['get_action',['../classUI.html#a30792a7a2d9c2fceb5852811662da744',1,'UI']]],
+  ['get_5fkey_26',['get_key',['../classUI.html#a56d73bdb7b0f9d219f85c4880e10d81f',1,'UI']]],
+  ['get_5fstring_27',['get_string',['../classUI.html#a8cc78e7d689074fcbd74566000cceeb8',1,'UI']]]
 ];

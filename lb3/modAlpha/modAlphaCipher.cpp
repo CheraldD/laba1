@@ -4,13 +4,11 @@ modAlphaCipher::modAlphaCipher(const std::wstring& skey)
     for (unsigned i=0; i<numAlpha.size(); i++) {
         alphaNum[numAlpha[i]]=i;
     }
-    key_validation(getValidKey(skey));
     key = convert(getValidKey(skey));
 }
 std::wstring modAlphaCipher::encrypt(const std::wstring& open_text)
 {
     std::wstring temp = getValidOpenText(open_text);
-    text_validation(temp);
     std::vector<int> work = convert(temp);
     for(unsigned i=0; i < work.size(); i++) {
         work[i] = (work[i] + key[i % key.size()]) % alphaNum.size();
@@ -20,7 +18,6 @@ std::wstring modAlphaCipher::encrypt(const std::wstring& open_text)
 std::wstring modAlphaCipher::decrypt(const std::wstring& cipher_text)
 {
     std::wstring temp = getValidCipherText(cipher_text);
-    text_validation(temp);
     std::vector<int> work = convert(temp);
     for(unsigned i=0; i < work.size(); i++) {
         work[i] = (work[i] + alphaNum.size() - key[i % key.size()]) % alphaNum.size();
@@ -54,6 +51,11 @@ inline std::wstring modAlphaCipher::getValidKey(const std::wstring & s)
         if (iswlower(c))
             c = towupper(c);
     }
+    for (int i =0;i<tmp.length();i++){
+        if(numAlpha.find(tmp[i])==std::wstring::npos){
+            throw cipher_error("Invalid text's alphabet");
+        }
+    }
 return tmp;
 }
 inline std::wstring modAlphaCipher::getValidOpenText(const std::wstring & s)
@@ -70,6 +72,11 @@ inline std::wstring modAlphaCipher::getValidOpenText(const std::wstring & s)
     }
     if (tmp.empty())
         throw cipher_error("Empty open text");
+    for (int i =0;i<tmp.length();i++){
+        if(numAlpha.find(tmp[i])==std::wstring::npos){
+            throw cipher_error("Invalid text's alphabet");
+        }
+    }
     return tmp;
 }
 inline std::wstring modAlphaCipher::getValidCipherText(const std::wstring & s)
@@ -80,19 +87,10 @@ inline std::wstring modAlphaCipher::getValidCipherText(const std::wstring & s)
         if (!iswupper(c))
             throw cipher_error(std::string("Invalid cipher text "));
     }
+    for (int i =0;i<s.length();i++){
+        if(numAlpha.find(s[i])==std::wstring::npos){
+            throw cipher_error("Invalid text's alphabet");
+        }
+    }
     return s;
-}
-void modAlphaCipher::text_validation(const std::wstring &text){
-    for (int i =0;i<text.length();i++){
-        if(numAlpha.find(text[i])==std::wstring::npos){
-            throw cipher_error("Invalid text's alphabet");
-        }
-    }
-}
-void modAlphaCipher::key_validation(const std::wstring &key){
-    for (int i =0;i<key.length();i++){
-        if(numAlpha.find(key[i])==std::wstring::npos){
-            throw cipher_error("Invalid text's alphabet");
-        }
-    }
 }

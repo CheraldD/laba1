@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['write_5fstr_5fto_5fv_22',['write_str_to_v',['../classtable__cipher.html#a67c1cb4aff82a6bcc5c8a33ee9f46e2f',1,'table_cipher::write_str_to_v(std::string st, std::vector&lt; std::vector&lt; std::string &gt;&gt; &amp;v)'],['../classtable__cipher.html#a2d44bb89a4f89b23cbcc0eccaf1b0430',1,'table_cipher::write_str_to_v(std::vector&lt; std::vector&lt; std::string &gt;&gt; &amp;v)']]]
+  ['table_5fcipher_29',['table_cipher',['../classtable__cipher.html#a35b1f399c9e3f4e588729eeb84b6494d',1,'table_cipher']]],
+  ['text_5fvalidation_30',['text_validation',['../classtable__cipher.html#a095a945c28462cb26d6e732274675046',1,'table_cipher']]]
 ];

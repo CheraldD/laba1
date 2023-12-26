@@ -61,7 +61,7 @@ SUITE(modAlpha_test)
             CHECK_THROW(modAlphaCipher cp(L""),cipher_error);
         }
         TEST(WeakKey) {
-            CHECK_THROW(modAlphaCipher cp(L"ААА"),cipher_error);
+            CHECK_THROW(modAlphaCipher(L"ААА").encrypt(L"ДЛИННЫЙТЕКСТДЛЯПРОВЕРКИ"),cipher_error);
         }
         TEST(KeyFromWrongAlphabet) {
             CHECK_THROW(modAlphaCipher cp(L"ABC"),cipher_error);
@@ -124,6 +124,9 @@ SUITE(modAlpha_test)
                 CHECK(false);
             }
         }
+        TEST_FIXTURE(KeyB_fixture,EnglishString) {
+            CHECK_THROW(p->encrypt(L"EATHTHOSEFRENCHPIES"),cipher_error);
+        }
     }
     SUITE(DecryptText) {
         TEST_FIXTURE(KeyB_fixture, UpCaseString) {
@@ -137,10 +140,10 @@ SUITE(modAlpha_test)
             }
         }
         TEST_FIXTURE(KeyB_fixture, LowCaseString) {
-            CHECK_THROW(p->decrypt(L"срЖЪЮЯФЛЧЦТВПШХКУМЛЧГХНРМ"),cipher_error);
+            CHECK_THROW(p->decrypt(L"срЖЪЮЯФКЧЦТВПШХЙУМКЧГХНРМ"),cipher_error);
         }
         TEST_FIXTURE(KeyB_fixture, WhitespaceString) {
-            CHECK_THROW(p->decrypt(L"СРЖЪЮ ЯФЛЧ ЦТВПШХКУМЛЧ ГХНРМ"),cipher_error);
+            CHECK_THROW(p->decrypt(L"СРЖЪЮ ЯФКЧ ЦТВПШХЙУМКЧ ГХНРМ"),cipher_error);
         }
         TEST_FIXTURE(KeyB_fixture, DigitsString) {
             CHECK_THROW(p->decrypt(L"УПРДЭО2024ЕРЁРО"),cipher_error);
@@ -160,6 +163,9 @@ SUITE(modAlpha_test)
             else{
                 CHECK(false);
             }
+        }
+        TEST_FIXTURE(KeyB_fixture,EnglishString) {
+            CHECK_THROW(p->encrypt(L"ASDGFDHRTWSFD"),cipher_error);
         }
     }
 }
@@ -236,16 +242,16 @@ SUITE(table_cipher_test){
             CHECK_EQUAL("HELLOWORLD",t.decrypt());
         }
         TEST(text_with_spaces){
-            std::string test = "LRLOEWDHOL";
+            std::string test = "LRLOE WDHOL";
             std::string test2=" ";
             table_cipher t (test,4,test2);
             CHECK_EQUAL("HELLOWORLD",t.decrypt());
         }
         TEST(non_int_key){
-            std::string test = "HELLOWORLD";
-            std::string test2="";
+            std::string test = "LRLOEWDHOL";
+            std::string test2=" ";
             table_cipher t (test,4.9,test2);
-            CHECK_EQUAL("LRLOEWDHOL",t.encrypt());
+            CHECK_EQUAL("HELLOWORLD",t.decrypt());
         }
     }
 }

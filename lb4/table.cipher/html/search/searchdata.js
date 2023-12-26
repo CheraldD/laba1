@@ -1,9 +1,10 @@
 var indexSectionsWithContent =
 {
-  0: "dekmtuw",
+  0: "adegkmstuw",
   1: "tu",
   2: "mt",
-  3: "dektw"
+  3: "degktuw",
+  4: "aks"
 };
 
 var indexSectionNames =
@@ -11,7 +12,8 @@ var indexSectionNames =
   0: "all",
   1: "classes",
   2: "files",
-  3: "functions"
+  3: "functions",
+  4: "variables"
 };
 
 var indexSectionLabels =
@@ -19,6 +21,7 @@ var indexSectionLabels =
   0: "Указатель",
   1: "Классы",
   2: "Файлы",
-  3: "Функции"
+  3: "Функции",
+  4: "Переменные"
 };
 
